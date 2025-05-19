@@ -52,4 +52,4 @@ Content-Type: application/json
 }
 
 ### 
-DELETE {{URL}}/users/1
+DELETE {{URL}}/users/6

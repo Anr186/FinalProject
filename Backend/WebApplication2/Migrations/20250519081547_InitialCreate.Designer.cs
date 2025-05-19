@@ -12,7 +12,7 @@ using WebApplication2.Repositories;
 namespace WebApplication2.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250519060755_InitialCreate")]
+    [Migration("20250519081547_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
