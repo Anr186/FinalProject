@@ -11,6 +11,9 @@ public class UserService
     {
         _repository = repository;
     }
+    public const string AdminRole = "Admin";
+    public const string AuthorRole = "Author";
+    public const string ReviewerRole = "Reviewer";
     public IEnumerable<User> GetAll() => _repository.GetAll();
     public async Task<IEnumerable<User>> GetAllAsync() => await _repository.GetAllAsync();
     public User GetById(int id) => _repository.GetById(id);
@@ -19,15 +22,19 @@ public class UserService
     public void Delete(int id) => _repository.Delete(id);
 
     public async Task<User?> Authenticate(string email, string password)
-{
-    var user = await _repository.GetByEmailAsync(email);
-    if (user == null) 
     {
-        Console.WriteLine($"User with email {email} not found");
-        return null;
-    }
+        var user = await _repository.GetByEmailAsync(email);
+        if (user == null)
+        {
+            Console.WriteLine($"User with email {email} not found");
+            return null;
+        }
+
+        Console.WriteLine($"Stored password: {user.Password}, input password: {password}");
+        return user.Password == password ? user : null;
+    }  
     
-    Console.WriteLine($"Stored password: {user.Password}, input password: {password}");
-    return user.Password == password ? user : null;
-}
+    public bool IsAdmin(User user) => user.Role == AdminRole;
+    public bool IsAuthor(User user) => user.Role == AuthorRole;
+    public bool IsReviewer(User user) => user.Role == ReviewerRole; 
 }

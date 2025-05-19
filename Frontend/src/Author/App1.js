@@ -1,15 +1,14 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar';
 import Profile from './Profile';
 import ReviewArticles from './ReviewArticles';
 import SubmitArticle from './SubmitArticle';
 
-function App() {
+function App({ user, onLogout }) {
   return (
-    <Router>
       <div className="App">
-        <Navbar />
+        <Navbar user={user} onLogout={onLogout} />
         <Routes>
           <Route path="/profile" element={<Profile />} />
           <Route path="/articles" element={<ReviewArticles />} />
@@ -17,7 +16,6 @@ function App() {
           <Route path="/" element={<Profile/>} />
         </Routes>
       </div>
-    </Router>
   );
 }
 

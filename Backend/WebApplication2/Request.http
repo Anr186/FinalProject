@@ -21,6 +21,24 @@ Content-Type: application/json
   "bio": "asdasdasfsdfsfsdfdf"
 }
 ###
+POST {{URL}}/users/admin
+Content-Type: application/json
+
+{
+    "email": "admin@example.com",
+    "password": "secure123",
+    "fullName": "Admin"
+}
+###
+POST {{URL}}/users/reviewer
+Content-Type: application/json
+
+{
+    "email": "andrey.terent1ev@mail.ru",
+    "password": "123456",
+    "fullName": "Reviewer Boba"
+}
+###
 PATCH {{URL}}/users/1
 Content-Type: application/json
 

@@ -1,18 +1,17 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar';
 import Profile from './Profile';
 import InProgressReviews from './InProgressReviews';
 import CompletedReviews from './CompletedReviews';
 import './App.css';
 
-function App() {
+function App({ user, onLogout }) {
   return (
-    <Router>
       <div className="app">
         <header className="app-header">
           <h1>ReviewSystem</h1>
-          <Navbar />
+          <Navbar user={user} onLogout={onLogout} />
         </header>
         
         <main className="app-content">
@@ -27,7 +26,6 @@ function App() {
           © 2025 Review System. All rights reserved.
         </footer>
       </div>
-    </Router>
   );
 }
 

@@ -1,14 +1,13 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar';
 import UserManagement from './UserManagement';
 import AddUser from './AddUser';
 
-function App() {
+function App({ user, onLogout }) {
   return (
-    <Router>
       <div className="App">
-        <Navbar />
+        <Navbar user={user} onLogout={onLogout} />
         <Routes>
           <Route path="/admin/users" element={<UserManagement />} />
           <Route path="/admin/users/add" element={<AddUser />} />
@@ -17,7 +16,6 @@ function App() {
           <Route path="/" element={<UserManagement />} /> 
         </Routes>
       </div>
-    </Router>
   );
 }
 

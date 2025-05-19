@@ -12,7 +12,7 @@ using WebApplication2.Repositories;
 namespace WebApplication2.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250518161149_InitialCreate")]
+    [Migration("20250519060755_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -89,6 +89,12 @@ namespace WebApplication2.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("Author");
 
                     b.Property<string>("Specialization")
                         .IsRequired()

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function App() {
+function App({onLogin}) {
   const [isLoginForm, setIsLoginForm] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -41,8 +41,8 @@ function App() {
 
     if (!formData.password) {
       newErrors.password = 'Пароль обязателен';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Пароль должен содержать минимум 6 символов';
+    } else if (formData.password.length < 5) {
+      newErrors.password = 'Пароль должен содержать минимум 5 символов';
     }
 
     setErrors(newErrors);
@@ -64,64 +64,69 @@ function App() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setApiError('');
-    setEmailExists(false);
-    
-    if (validateForm()) {
-      setIsLoading(true);
-      try {
-        if (!isLoginForm) {
-          const exists = await checkEmailExists(formData.email);
-          if (exists) {
-            setEmailExists(true);
-            setIsLoading(false);
-            return;
-          }
+  e.preventDefault();
+  setApiError('');
+  setEmailExists(false);
+  
+  if (validateForm()) {
+    setIsLoading(true);
+    try {
+      if (!isLoginForm) {
+        const exists = await checkEmailExists(formData.email);
+        if (exists) {
+          setEmailExists(true);
+          setIsLoading(false);
+          return;
         }
-
-        const endpoint = isLoginForm ? '/login' : '/users';
-        const response = await fetch(`http://localhost:5284${endpoint}`, {
-          method: isLoginForm ? 'POST' : 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(isLoginForm ? {
-            Email: formData.email,
-            Password: formData.password
-          } : {
-            FullName: formData.name,
-            Email: formData.email,
-            Password: formData.password,
-            Specialization: '',
-            Location: '',
-            Bio: ''
-          })
-        });
-
-        const data = await response.json();
-        
-        if (!response.ok) {
-          throw new Error(data.message || `Ошибка при ${isLoginForm ? 'входе' : 'регистрации'}`);
-        }
-
-        console.log(isLoginForm ? 'Пользователь вошел' : 'Пользователь создан:', data);
-        setIsSubmitted(true);
-        setFormData({
-          name: '',
-          email: '',
-          password: ''
-        });
-      } catch (error) {
-        console.error(`Ошибка при ${isLoginForm ? 'входе' : 'регистрации'}:`, error);
-         const errorResponse = error.response || await error.json?.() || error;
-    const errorMessage = errorResponse.message || errorResponse.statusText || error.message;
-        setApiError(errorMessage || `Произошла ошибка при ${isLoginForm ? 'входе' : 'регистрации'}`);
-      } finally {
-        setIsLoading(false);
       }
+
+      const endpoint = isLoginForm ? '/login' : '/users';
+      const response = await fetch(`http://localhost:5284${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(isLoginForm ? {
+          Email: formData.email,
+          Password: formData.password
+        } : {
+          FullName: formData.name,
+          Email: formData.email,
+          Password: formData.password,
+          Specialization: '',
+          Location: '',
+          Bio: '',
+          Role: 'Author'
+        })
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Пользователь не найден или неверный пароль');
+        }
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Ошибка при ${isLoginForm ? 'входе' : 'регистрации'}`);
+      }
+
+      const data = await response.json();
+      
+      console.log(isLoginForm ? 'Пользователь вошел' : 'Пользователь создан:', data);
+
+      onLogin(data.user || data);
+      setIsSubmitted(true);
+      setFormData({
+        name: '',
+        email: '',
+        password: ''
+      });
+    } catch (error) {
+      console.error(`Ошибка при ${isLoginForm ? 'входе' : 'регистрации'}:`, error);
+      setApiError(error.message || `Произошла ошибка при ${isLoginForm ? 'входе' : 'регистрации'}`);
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }
+};
 
   const toggleForm = () => {
     setIsLoginForm(!isLoginForm);

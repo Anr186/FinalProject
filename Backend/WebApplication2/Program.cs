@@ -81,7 +81,16 @@ app.MapPost("/login", async (LoginRequest request, UserService service) =>
             
         return Results.Ok(new { 
             message = "Login successful",
-            user 
+            user = new
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                Role = user.Role,
+                Specialization = user.Specialization,
+                Location = user.Location,
+                Bio = user.Bio
+            }
         });
     }
     catch (Exception ex)
@@ -100,14 +109,64 @@ app.MapPost("/users", (User user, UserService service) =>
     
     if (string.IsNullOrEmpty(user.Password))
         return Results.BadRequest("Password is required");
+        
+    if (string.IsNullOrEmpty(user.Role))
+    {
+        user.Role = UserService.AuthorRole;
+    }
 
     try
     {
         var createdUser = service.Add(user);
-        return Results.Created($"/users/{createdUser.Id}", new {
+        return Results.Created($"/users/{createdUser.Id}", new
+        {
             message = "User registered successfully",
             user = createdUser
         });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+});
+
+app.MapPost("/users/admin", (User user, UserService service) =>
+{
+    if (string.IsNullOrEmpty(user.Email))
+        return Results.BadRequest("Email is required");
+
+    if (string.IsNullOrEmpty(user.Password))
+        return Results.BadRequest("Password is required");
+
+    user.Role = UserService.AdminRole;
+
+    if (string.IsNullOrEmpty(user.FullName)) user.FullName = "Admin";
+    try
+    {
+        var createdUser = service.Add(user);
+        return Results.Created($"/users/{createdUser.Id}", createdUser);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+});
+
+app.MapPost("/users/reviewer", (User user, UserService service) =>
+{
+    if (string.IsNullOrEmpty(user.Email))
+        return Results.BadRequest("Email is required");
+    
+    if (string.IsNullOrEmpty(user.Password))
+        return Results.BadRequest("Password is required");
+
+    user.Role = UserService.ReviewerRole;
+    
+    if (string.IsNullOrEmpty(user.FullName)) user.FullName = "Reviewer";
+    try
+    {
+        var createdUser = service.Add(user);
+        return Results.Created($"/users/{createdUser.Id}", createdUser);
     }
     catch (Exception ex)
     {

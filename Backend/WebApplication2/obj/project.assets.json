@@ -2852,11 +2852,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Anr1\\Desktop\\Present courses\\VisualProgramming\\FinalProject\\Backend\\WebApplication2\\WebApplication2.csproj",
+      "projectUniqueName": "C:\\Users\\Anr1\\Desktop\\Present courses\\VisualProgramming\\git\\FinalProject\\Backend\\WebApplication2\\WebApplication2.csproj",
       "projectName": "WebApplication2",
-      "projectPath": "C:\\Users\\Anr1\\Desktop\\Present courses\\VisualProgramming\\FinalProject\\Backend\\WebApplication2\\WebApplication2.csproj",
+      "projectPath": "C:\\Users\\Anr1\\Desktop\\Present courses\\VisualProgramming\\git\\FinalProject\\Backend\\WebApplication2\\WebApplication2.csproj",
       "packagesPath": "C:\\Users\\Anr1\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Anr1\\Desktop\\Present courses\\VisualProgramming\\FinalProject\\Backend\\WebApplication2\\obj\\",
+      "outputPath": "C:\\Users\\Anr1\\Desktop\\Present courses\\VisualProgramming\\git\\FinalProject\\Backend\\WebApplication2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

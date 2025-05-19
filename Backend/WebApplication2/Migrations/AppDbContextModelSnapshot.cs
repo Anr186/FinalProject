@@ -87,6 +87,12 @@ namespace WebApplication2.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("Author");
+
                     b.Property<string>("Specialization")
                         .IsRequired()
                         .HasColumnType("text");

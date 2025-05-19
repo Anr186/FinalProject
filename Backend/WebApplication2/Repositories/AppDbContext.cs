@@ -15,6 +15,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         entity.Property(a => a.FullName).IsRequired();
         entity.Property(a => a.Email).IsRequired();
         entity.Property(a => a.Password).IsRequired();
+        entity.Property(a => a.Role).IsRequired().HasDefaultValue("Author");
         entity.Property(a => a.Specialization);
         entity.Property(a => a.Location);
         entity.Property(a => a.Bio);
