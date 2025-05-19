@@ -46,13 +46,18 @@ public class ArticleRepository : IArticleRepository
     public Article Update(int id, Article article)
     {
         var existingArticle = GetById(id);
-        
-        existingArticle.Title = article.Title;
-        existingArticle.Category = article.Category;
-        existingArticle.Content = article.Content;
-        existingArticle.Status = article.Status;
-        existingArticle.ImagePngPath = article.ImagePngPath;
-        existingArticle.WordDocumentPath = article.WordDocumentPath;
+    
+        if (!string.IsNullOrEmpty(article.Title)) existingArticle.Title = article.Title;
+    
+        if (!string.IsNullOrEmpty(article.Category)) existingArticle.Category = article.Category;
+    
+        if (!string.IsNullOrEmpty(article.Content)) existingArticle.Content = article.Content;
+    
+        if (!string.IsNullOrEmpty(article.Status)) existingArticle.Status = article.Status;
+    
+        if (!string.IsNullOrEmpty(article.ImagePngPath)) existingArticle.ImagePngPath = article.ImagePngPath;
+    
+        if (!string.IsNullOrEmpty(article.WordDocumentPath)) existingArticle.WordDocumentPath = article.WordDocumentPath;
 
         _context.SaveChanges();
         return existingArticle;

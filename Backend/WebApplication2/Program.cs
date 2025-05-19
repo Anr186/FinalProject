@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication2.Model;
 using WebApplication2.Repositories;
 using WebApplication2.Services;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +32,12 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseCors("AllowReactApp");
-
+app.UseStaticFiles(); 
+app.UseStaticFiles(new StaticFileOptions {
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
+    RequestPath = "/Uploads"
+});
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -365,6 +371,68 @@ app.MapDelete("/recenses/{id}", (int id, RecenseService service) =>
     catch (KeyNotFoundException)
     {
         return Results.NotFound();
+    }
+});
+app.MapPost("/articles/{id}/upload-word", async (int id, HttpRequest request, ArticleService service) =>
+{
+    var file = request.Form.Files.FirstOrDefault();
+    if (file == null || file.Length == 0)
+        return Results.BadRequest("No file uploaded");
+
+    if (Path.GetExtension(file.FileName).ToLower() != ".docx")
+        return Results.BadRequest("Only .docx files are allowed");
+
+    try
+    {
+        var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+        if (!Directory.Exists(uploadsDir))
+            Directory.CreateDirectory(uploadsDir);
+
+        var fileName = $"article_{id}_{DateTime.Now.Ticks}{Path.GetExtension(file.FileName)}";
+        var filePath = Path.Combine(uploadsDir, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+        var relativePath = $"/Uploads/{fileName}";
+        return Results.Ok(new { filePath = relativePath });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+});
+
+app.MapPost("/articles/{id}/upload-image", async (int id, HttpRequest request, ArticleService service) => 
+{
+    var file = request.Form.Files.FirstOrDefault();
+    if (file == null || file.Length == 0)
+        return Results.BadRequest("No file uploaded");
+
+    var extension = Path.GetExtension(file.FileName).ToLower();
+    if (extension != ".png" && extension != ".jpg" && extension != ".jpeg")
+        return Results.BadRequest("Only PNG or JPEG images are allowed");
+
+    try
+    {
+        var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+        if (!Directory.Exists(uploadsDir))
+            Directory.CreateDirectory(uploadsDir);
+
+        var fileName = $"article_{id}_{DateTime.Now.Ticks}{extension}";
+        var filePath = Path.Combine(uploadsDir, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+        var relativePath = $"/Uploads/{fileName}";
+        return Results.Ok(new { filePath = relativePath });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
     }
 });
 app.Run();

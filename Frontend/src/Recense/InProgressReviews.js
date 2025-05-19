@@ -70,6 +70,23 @@ const ReviewForm = ({ article, reviewerId, authorId, onClose, onSubmitSuccess })
     if (e.target === e.currentTarget) onClose();
   };
 
+  const handleDownload = (filePath) => {
+  if (!filePath) return;
+  
+  const fullPath = filePath.startsWith('http') ? filePath : 
+                  `http://localhost:5284${filePath.startsWith('/') ? filePath : `/${filePath}`}`;
+  
+  const link = document.createElement('a');
+  link.href = fullPath;
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  link.download = filePath.split('/').pop() || 'download';
+  
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
   return (
     <div
       onClick={handleOverlayClick}
@@ -171,6 +188,140 @@ const ReviewForm = ({ article, reviewerId, authorId, onClose, onSubmitSuccess })
           }}>
             {article.summary || article.content?.slice(0, 150) + '...'}
           </p>
+        </div>
+
+        <div style={{ 
+          backgroundColor: '#f8f9fa',
+          padding: '15px',
+          borderRadius: '8px',
+          marginBottom: '20px',
+          borderLeft: '4px solid #2ecc71',
+        }}>
+          <h4 style={{ 
+            margin: '0 0 10px 0',
+            color: '#2c3e50',
+            fontSize: '16px',
+            fontWeight: '600'
+          }}>
+            Article Attachments
+          </h4>
+
+          {article.wordDocumentPath && (
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '10px',
+              backgroundColor: 'white',
+              borderRadius: '6px',
+              marginBottom: '10px',
+              border: '1px solid #e0e0e0'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <svg 
+                  width="24" 
+                  height="24" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="#2b5797" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                  style={{ marginRight: '10px' }}
+                >
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span style={{ color: '#2c3e50' }}>
+                  {article.wordDocumentPath.split('/').pop()}
+                </span>
+              </div>
+              <button
+                onClick={() => handleDownload(article.wordDocumentPath)}
+                style={{
+                  padding: '6px 12px',
+                  backgroundColor: '#2b5797',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  transition: 'background-color 0.2s',
+                  ':hover': {
+                    backgroundColor: '#1e3f72'
+                  }
+                }}
+              >
+                Download
+              </button>
+            </div>
+          )}
+
+          {article.imagePngPath && (
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '10px',
+              backgroundColor: 'white',
+              borderRadius: '6px',
+              marginBottom: '10px',
+              border: '1px solid #e0e0e0'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <svg 
+                  width="24" 
+                  height="24" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="#d35400" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                  style={{ marginRight: '10px' }}
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span style={{ color: '#2c3e50' }}>
+                  {article.imagePngPath.split('/').pop()}
+                </span>
+              </div>
+              <button
+                onClick={() => handleDownload(article.imagePngPath)}
+                style={{
+                  padding: '6px 12px',
+                  backgroundColor: '#d35400',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  transition: 'background-color 0.2s',
+                  ':hover': {
+                    backgroundColor: '#a04000'
+                  }
+                }}
+              >
+                Download
+              </button>
+            </div>
+          )}
+
+          {!article.wordDocumentPath && !article.imagePngPath && (
+            <p style={{ 
+              color: '#7f8c8d',
+              fontStyle: 'italic',
+              margin: 0,
+              fontSize: '14px'
+            }}>
+              No attachments available for this article
+            </p>
+          )}
         </div>
 
         {success && (
