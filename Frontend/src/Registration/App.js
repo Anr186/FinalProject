@@ -64,69 +64,69 @@ function App({onLogin}) {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setApiError('');
-  setEmailExists(false);
-  
-  if (validateForm()) {
-    setIsLoading(true);
-    try {
-      if (!isLoginForm) {
-        const exists = await checkEmailExists(formData.email);
-        if (exists) {
-          setEmailExists(true);
-          setIsLoading(false);
-          return;
+    e.preventDefault();
+    setApiError('');
+    setEmailExists(false);
+    
+    if (validateForm()) {
+      setIsLoading(true);
+      try {
+        if (!isLoginForm) {
+          const exists = await checkEmailExists(formData.email);
+          if (exists) {
+            setEmailExists(true);
+            setIsLoading(false);
+            return;
+          }
         }
-      }
 
-      const endpoint = isLoginForm ? '/login' : '/users';
-      const response = await fetch(`http://localhost:5284${endpoint}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(isLoginForm ? {
-          Email: formData.email,
-          Password: formData.password
-        } : {
-          FullName: formData.name,
-          Email: formData.email,
-          Password: formData.password,
-          Specialization: '',
-          Location: '',
-          Bio: '',
-          Role: 'Author'
-        })
-      });
+        const endpoint = isLoginForm ? '/login' : '/users';
+        const response = await fetch(`http://localhost:5284${endpoint}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(isLoginForm ? {
+            Email: formData.email,
+            Password: formData.password
+          } : {
+            FullName: formData.name,
+            Email: formData.email,
+            Password: formData.password,
+            Specialization: '',
+            Location: '',
+            Bio: '',
+            Role: 'Author'
+          })
+        });
 
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('Пользователь не найден или неверный пароль');
+        if (!response.ok) {
+          if (response.status === 401) {
+            throw new Error('Пользователь не найден или неверный пароль');
+          }
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || `Ошибка при ${isLoginForm ? 'входе' : 'регистрации'}`);
         }
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `Ошибка при ${isLoginForm ? 'входе' : 'регистрации'}`);
+
+        const data = await response.json();
+        
+        console.log(isLoginForm ? 'Пользователь вошел' : 'Пользователь создан:', data);
+
+        onLogin(data.user || data);
+        setIsSubmitted(true);
+        setFormData({
+          name: '',
+          email: '',
+          password: ''
+        });
+      } catch (error) {
+        console.error(`Ошибка при ${isLoginForm ? 'входе' : 'регистрации'}:`, error);
+        setApiError(error.message || `Произошла ошибка при ${isLoginForm ? 'входе' : 'регистрации'}`);
+      } finally {
+        setIsLoading(false);
       }
-
-      const data = await response.json();
-      
-      console.log(isLoginForm ? 'Пользователь вошел' : 'Пользователь создан:', data);
-
-      onLogin(data.user || data);
-      setIsSubmitted(true);
-      setFormData({
-        name: '',
-        email: '',
-        password: ''
-      });
-    } catch (error) {
-      console.error(`Ошибка при ${isLoginForm ? 'входе' : 'регистрации'}:`, error);
-      setApiError(error.message || `Произошла ошибка при ${isLoginForm ? 'входе' : 'регистрации'}`);
-    } finally {
-      setIsLoading(false);
     }
-  }
-};
+  };
 
   const toggleForm = () => {
     setIsLoginForm(!isLoginForm);
@@ -147,17 +147,21 @@ function App({onLogin}) {
       justifyContent: 'center',
       alignItems: 'center',
       minHeight: '100vh',
-      backgroundColor: '#f4f4f9',
+      backgroundImage: 'url(/img/footer-bg.png)', 
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
       padding: '20px'
     }}>
       <div style={{
-        backgroundColor: 'white',
+        backgroundColor: 'rgba(255, 255, 255, 0.85)',
         padding: '30px',
         borderRadius: '8px',
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         width: '350px',
         maxWidth: '100%',
-        margin: '20px auto'
+        margin: '20px auto',
+        backdropFilter: 'blur(5px)'
       }}>
         <h2 style={{
           color: '#333',

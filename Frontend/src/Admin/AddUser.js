@@ -23,7 +23,7 @@ const AddUser = () => {
       fullName: firstName + ' ' + lastName,
       email,
       role,
-      password: 'defaultPassword123',  // стандартный пароль
+      password: 'defaultPassword123',
     };
 
     try {
@@ -44,109 +44,224 @@ const AddUser = () => {
   };
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
-      <h2>Add New User</h2>
+    <div style={{ 
+      backgroundColor: '#d4d4d4',
+      minHeight: '100vh',
+      padding: '40px 0',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
+      <div style={{ 
+        backgroundColor: 'white',
+        borderRadius: '10px',
+        padding: '40px',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        width: '100%',
+        maxWidth: '600px'
+      }}>
+        <h2 style={{ 
+          fontSize: '28px',
+          marginBottom: '30px',
+          color: '#333',
+          textAlign: 'center'
+        }}>
+          Add New User
+        </h2>
 
-      {error && (
-        <div style={{ color: 'red', marginBottom: '20px' }}>
-          {error}
-        </div>
-      )}
+        {error && (
+          <div style={{ 
+            color: '#721c24',
+            backgroundColor: '#f8d7da',
+            padding: '15px',
+            marginBottom: '25px',
+            borderRadius: '6px',
+            border: '1px solid #f5c6cb',
+            textAlign: 'center'
+          }}>
+            {error}
+          </div>
+        )}
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ margin: '20px 0' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>First Name</label>
-              <input
-                type="text"
-                value={firstName}
-                onChange={e => setFirstName(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  border: '1px solid #ced4da',
-                  borderRadius: '4px'
-                }}
-              />
-            </div>
-            <div>
-              <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>Last Name</label>
-              <input
-                type="text"
-                value={lastName}
-                onChange={e => setLastName(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  border: '1px solid #ced4da',
-                  borderRadius: '4px'
-                }}
-              />
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '25px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              <div>
+                <label style={{ 
+                  display: 'block', 
+                  marginBottom: '10px', 
+                  fontWeight: '500',
+                  color: '#555',
+                  fontSize: '16px'
+                }}>
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={e => setFirstName(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #e0e0e0',
+                    borderRadius: '6px',
+                    fontSize: '16px',
+                    transition: 'all 0.3s',
+                    ':focus': {
+                      borderColor: '#80bdff',
+                      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+                      outline: 'none'
+                    }
+                  }}
+                />
+              </div>
+              <div>
+                <label style={{ 
+                  display: 'block', 
+                  marginBottom: '10px', 
+                  fontWeight: '500',
+                  color: '#555',
+                  fontSize: '16px'
+                }}>
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={e => setLastName(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #e0e0e0',
+                    borderRadius: '6px',
+                    fontSize: '16px',
+                    transition: 'all 0.3s',
+                    ':focus': {
+                      borderColor: '#80bdff',
+                      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+                      outline: 'none'
+                    }
+                  }}
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div style={{ margin: '20px 0' }}>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '8px',
-              border: '1px solid #ced4da',
-              borderRadius: '4px'
-            }}
-          />
-        </div>
+          <div style={{ marginBottom: '25px' }}>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '10px', 
+              fontWeight: '500',
+              color: '#555',
+              fontSize: '16px'
+            }}>
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '12px',
+                border: '1px solid #e0e0e0',
+                borderRadius: '6px',
+                fontSize: '16px',
+                transition: 'all 0.3s',
+                ':focus': {
+                  borderColor: '#80bdff',
+                  boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+                  outline: 'none'
+                }
+              }}
+            />
+          </div>
 
-        <div style={{ margin: '20px 0' }}>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>Role</label>
-          <select
-            value={role}
-            onChange={e => setRole(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '8px',
-              border: '1px solid #ced4da',
-              borderRadius: '4px'
-            }}
-          >
-            <option value="">Select Role</option>
-            <option value="Admin">Admin</option>
-            <option value="Author">Author</option>
-            <option value="Viewer">Viewer</option>
-          </select>
-        </div>
+          <div style={{ marginBottom: '30px' }}>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '10px', 
+              fontWeight: '500',
+              color: '#555',
+              fontSize: '16px'
+            }}>
+              Role
+            </label>
+            <select
+              value={role}
+              onChange={e => setRole(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '12px',
+                border: '1px solid #e0e0e0',
+                borderRadius: '6px',
+                fontSize: '16px',
+                backgroundColor: 'white',
+                transition: 'all 0.3s',
+                ':focus': {
+                  borderColor: '#80bdff',
+                  boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+                  outline: 'none'
+                }
+              }}
+            >
+              <option value="">Select Role</option>
+              <option value="Admin">Admin</option>
+              <option value="Author">Author</option>
+              <option value="Viewer">Viewer</option>
+            </select>
+          </div>
 
-        <div style={{ display: 'flex', gap: '10px', marginTop: '30px' }}>
-          <Link to="/admin/users" style={{
-            textDecoration: 'none',
-            padding: '8px 16px',
-            backgroundColor: '#6c757d',
-            color: 'white',
-            borderRadius: '4px',
-            display: 'inline-block'
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center',
+            gap: '20px',
+            marginTop: '30px'
           }}>
-            Cancel
-          </Link>
-          <button
-            type="submit"
-            style={{
-              padding: '8px 16px',
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            Create User
-          </button>
-        </div>
-      </form>
+            <Link 
+              to="/admin/users" 
+              style={{
+                textDecoration: 'none',
+                padding: '12px 24px',
+                backgroundColor: '#FFB7B2', // Пастельно-розовый
+                color: '#333',
+                borderRadius: '6px',
+                fontSize: '16px',
+                fontWeight: '500',
+                transition: 'all 0.3s',
+                border: 'none',
+                cursor: 'pointer',
+                ':hover': {
+                  backgroundColor: '#FF9AA2',
+                  transform: 'translateY(-2px)'
+                }
+              }}
+            >
+              Cancel
+            </Link>
+            <button
+              type="submit"
+              style={{
+                padding: '12px 24px',
+                backgroundColor: '#B5EAD7', // Пастельно-зеленый
+                color: '#333',
+                borderRadius: '6px',
+                fontSize: '16px',
+                fontWeight: '500',
+                transition: 'all 0.3s',
+                border: 'none',
+                cursor: 'pointer',
+                ':hover': {
+                  backgroundColor: '#97D9B2',
+                  transform: 'translateY(-2px)'
+                }
+              }}
+            >
+              Create User
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
