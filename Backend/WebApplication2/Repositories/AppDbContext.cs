@@ -19,6 +19,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(a => a.Role).IsRequired().HasDefaultValue("Author");
             entity.Property(a => a.Specialization);
             entity.Property(a => a.Location);
+            entity.Property(a => a.ResumeFilePath); // Добавляем новое поле
+            entity.Property(a => a.ResumeContentType); // Добавляем новое поле
+
             entity.Property(a => a.Bio);
 
             entity.HasMany(a => a.Articles).WithOne(a => a.User).HasForeignKey(a => a.UserId);

@@ -261,4 +261,147 @@ app.MapDelete("/articles/{id}", (int id, ArticleService service) =>
     }
 });
 
+app.MapPost("/users/{id}/upload-resume", async (int id, IFormFile file, UserService service) =>
+{
+    if (file == null || file.Length == 0)
+        return Results.BadRequest("File is required");
+    
+
+    var allowedTypes = new[] { 
+        "application/pdf", 
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "image/png" 
+    };
+    
+    var allowedExtensions = new[] { ".pdf", ".doc", ".docx", ".png" };
+    var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+    
+    if (!allowedTypes.Contains(file.ContentType) || !allowedExtensions.Contains(fileExtension))
+        return Results.BadRequest("Only PDF, Word documents and PNG images allowed");
+
+    try
+    {
+        var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+        Directory.CreateDirectory(uploadsDir);
+        
+        var newFileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+        var filePath = Path.Combine(uploadsDir, newFileName);
+
+        await using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        var user = service.GetById(id);
+        
+        
+        if (!string.IsNullOrEmpty(user.ResumeFilePath) && File.Exists(user.ResumeFilePath))
+        {
+            File.Delete(user.ResumeFilePath);
+        }
+
+        user.ResumeFilePath = filePath;
+        user.ResumeContentType = file.ContentType;
+        user.ResumeLastUpdated = DateTime.UtcNow;
+        
+        service.Update(id, user);
+        
+        return Results.Ok(new {
+            message = "File uploaded successfully",
+            fileName = newFileName,
+            fileType = file.ContentType,
+            fileSize = file.Length,
+            lastUpdated = DateTime.UtcNow
+        });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+}).DisableAntiforgery();
+
+app.MapPatch("/users/{id}/update-resume", async (int id, IFormFile file, UserService service) =>
+{
+    if (file == null || file.Length == 0)
+        return Results.BadRequest("File is required");
+
+    var allowedTypes = new[] {
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "image/png"  
+    };
+
+   
+    var allowedExtensions = new[] { ".pdf", ".doc", ".docx", ".png" };
+    var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+    if (!allowedTypes.Contains(file.ContentType) || !allowedExtensions.Contains(fileExtension))
+        return Results.BadRequest("Only PDF, Word documents and PNG images allowed");
+
+    try
+    {
+        var user = service.GetById(id);
+
+      
+        if (!string.IsNullOrEmpty(user.ResumeFilePath) && File.Exists(user.ResumeFilePath))
+        {
+            File.Delete(user.ResumeFilePath);
+        }
+
+        var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+        Directory.CreateDirectory(uploadsDir);
+
+        var newFileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+        var filePath = Path.Combine(uploadsDir, newFileName);
+
+        await using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        user.ResumeFilePath = filePath;
+        user.ResumeContentType = file.ContentType;
+        user.ResumeLastUpdated = DateTime.UtcNow;
+
+        service.Update(id, user);
+
+        return Results.Ok(new
+        {
+            message = "File updated successfully",
+            fileName = newFileName,
+            fileType = file.ContentType,
+            fileSize = file.Length,  
+            lastUpdated = DateTime.UtcNow
+        });
+    }
+    catch (KeyNotFoundException)
+    {
+        return Results.NotFound("User not found");
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+}).DisableAntiforgery();
+
+app.MapGet("/users/{id}/download-resume", (int id, UserService service) =>
+{
+    try
+    {
+        var user = service.GetById(id);
+        
+        if (string.IsNullOrEmpty(user.ResumeFilePath) || !File.Exists(user.ResumeFilePath))
+            return Results.NotFound("File not found");
+
+        var fileStream = File.OpenRead(user.ResumeFilePath);
+        return Results.File(fileStream, user.ResumeContentType, Path.GetFileName(user.ResumeFilePath));
+    }
+    catch (KeyNotFoundException)
+    {
+        return Results.NotFound();
+    }
+}).DisableAntiforgery();
+
 app.Run();

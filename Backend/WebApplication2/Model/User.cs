@@ -10,5 +10,8 @@ public class User
     public string Specialization { get; set; } = string.Empty;
     public string Location { get; set; } = string.Empty;
     public string Bio { get; set; } = string.Empty;
+    public string? ResumeFilePath { get; set; } 
+    public string? ResumeContentType { get; set; } 
     public List<Article> Articles { get; set; } = new List<Article>();
-}
+    public DateTime? ResumeLastUpdated { get; set; }
+}   
