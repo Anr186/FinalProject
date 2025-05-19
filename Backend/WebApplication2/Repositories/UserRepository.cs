@@ -48,6 +48,7 @@ public class UserRepository : IUserRepository
         existingUser.Specialization = User.Specialization;
         existingUser.Location = User.Location;
         existingUser.Bio = User.Bio;
+        existingUser.Role = User.Role;
 
         _context.SaveChanges();
         return existingUser;

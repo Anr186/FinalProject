@@ -228,7 +228,29 @@ app.MapGet("/articles/{id}", (int id, ArticleService service) =>
         return Results.NotFound();
     }
 });
+app.MapPost("/articles", (Article article, ArticleService service) =>
+{
+    if (string.IsNullOrEmpty(article.Title))
+        return Results.BadRequest("Title is required");
+    
+    if (string.IsNullOrEmpty(article.Content))
+        return Results.BadRequest("Content is required");
 
+    article.Status = "Submitted";
+    article.SubmittedDate = DateTime.UtcNow;
+    article.ImagePngPath = ""; 
+    article.WordDocumentPath = ""; 
+
+    try
+    {
+        var createdArticle = service.Add(article);
+        return Results.Created($"/articles/{createdArticle.Id}", createdArticle);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+});
 app.MapGet("/articles/user/{userId}", async (int userId, ArticleService service) =>
 {
     var articles = await service.GetByUserIdAsync(userId);

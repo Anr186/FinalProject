@@ -1,102 +1,76 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-const ReviewArticles= () => {
+const ReviewArticles = ({ userId }) => {
+  const [articles, setArticles] = useState([]);
+  const [userInfo, setUserInfo] = useState({ fullName: '', specialization: '' });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!userId) return;
+
+    const fetchArticlesAndUser = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const articlesResponse = await fetch(`http://localhost:5284/articles/user/${userId}`);
+        if (!articlesResponse.ok) throw new Error('Failed to fetch articles');
+        const articlesData = await articlesResponse.json();
+
+        const userResponse = await fetch(`http://localhost:5284/users/${userId}`);
+        if (!userResponse.ok) throw new Error('Failed to fetch user info');
+        const userData = await userResponse.json();
+
+        setArticles(articlesData);
+        setUserInfo({ fullName: userData.fullName, specialization: userData.specialization });
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticlesAndUser();
+  }, [userId]);
+
+  if (loading) return <p>Loading articles...</p>;
+  if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
+
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-      <h1>John Doe</h1>
-      <p style={{ color: '#666' }}>Technology Writer</p>
+      <h1>{userInfo.fullName || 'User'}</h1>
+      <p style={{ color: '#666' }}>{userInfo.specialization || 'Writer'}</p>
 
       <h2 style={{ borderBottom: '1px solid #eee', paddingBottom: '10px' }}>Articles Under Review</h2>
 
-      {[
-        { 
-          title: "Machine Learning Advances in 2025", 
-          author: "Sarah Johnson", 
-          date: "May 4, 2025", 
-          category: "Technology" 
-        },
-        { 
-          title: "Blockchain in Healthcare", 
-          author: "Michael Chen", 
-          date: "May 3, 2025", 
-          category: "Healthcare" 
-        },
-        { 
-          title: "Sustainable Energy Solutions", 
-          author: "Emma Watson", 
-          date: "May 2, 2025", 
-          category: "Environment" 
-        }
-      ].map((article, index) => (
-        <div key={index} style={{ 
-          border: '1px solid #ddd', 
-          borderRadius: '5px', 
-          padding: '15px', 
-          marginBottom: '15px'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <input type="checkbox" style={{ marginRight: '10px' }} />
-            <h3 style={{ margin: '0' }}>{article.title}</h3>
+      {articles.length === 0 ? (
+        <p>No articles found.</p>
+      ) : (
+        articles.map((article) => (
+          <div
+            key={article.id}
+            style={{
+              border: '1px solid #ddd',
+              borderRadius: '5px',
+              padding: '15px',
+              marginBottom: '15px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <input type="checkbox" style={{ marginRight: '10px' }} />
+              <h3 style={{ margin: 0 }}>{article.title}</h3>
+            </div>
+            <p style={{ marginLeft: '25px', color: '#666' }}>by {userInfo.fullName}</p>
+            <div style={{ marginLeft: '25px', display: 'flex', gap: '15px' }}>
+              <span style={{ color: 'green' }}>
+                ✓ Submitted: {new Date(article.submittedDate).toLocaleDateString()}
+              </span>
+              <span>{article.category}</span>
+            </div>
           </div>
-          <p style={{ marginLeft: '25px', color: '#666' }}>by {article.author}</p>
-          <div style={{ marginLeft: '25px', display: 'flex', gap: '15px' }}>
-            <span style={{ color: 'green' }}>✓ Submitted: {article.date}</span>
-            <span>{article.category}</span>
-          </div>
-        </div>
-      ))}
-
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', 
-        gap: '20px',
-        marginTop: '30px'
-      }}>
-        <div style={{ border: '1px solid #ddd', borderRadius: '5px', padding: '15px' }}>
-          <h3>All Articles</h3>
-          <input 
-            type="text" 
-            placeholder="Search articles..." 
-            style={{ width: '100%', padding: '8px' }}
-          />
-        </div>
-        <div style={{ border: '1px solid #ddd', borderRadius: '5px', padding: '15px' }}>
-          <h3>Reading Review</h3>
-          <button style={{ 
-            background: 'none', 
-            border: 'none', 
-            color: '#0066cc', 
-            cursor: 'pointer',
-            padding: 0
-          }}>
-            View Details
-          </button>
-        </div>
-        <div style={{ border: '1px solid #ddd', borderRadius: '5px', padding: '15px' }}>
-          <h3>In Progress</h3>
-          <button style={{ 
-            background: 'none', 
-            border: 'none', 
-            color: '#0066cc', 
-            cursor: 'pointer',
-            padding: 0
-          }}>
-            View Details
-          </button>
-        </div>
-        <div style={{ border: '1px solid #ddd', borderRadius: '5px', padding: '15px' }}>
-          <h3>Reviewed</h3>
-          <button style={{ 
-            background: 'none', 
-            border: 'none', 
-            color: '#0066cc', 
-            cursor: 'pointer',
-            padding: 0
-          }}>
-            View Details
-          </button>
-        </div>
-      </div>
+        ))
+      )}
     </div>
   );
 };

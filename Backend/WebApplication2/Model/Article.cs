@@ -9,7 +9,7 @@ public class Article
     public string Status { get; set; } = string.Empty;
     public DateTime SubmittedDate { get; set; }
     public int UserId { get; set; }
-    public User User { get; set; } = new User();
+    public User? User { get; set; } 
     public string ImagePngPath { get; set; } = string.Empty;
     public string WordDocumentPath { get; set; } = string.Empty;
 }

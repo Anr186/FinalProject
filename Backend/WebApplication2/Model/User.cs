@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace WebApplication2.Model;
 
 public class User
@@ -10,5 +12,6 @@ public class User
     public string Specialization { get; set; } = string.Empty;
     public string Location { get; set; } = string.Empty;
     public string Bio { get; set; } = string.Empty;
+    [JsonIgnore]
     public List<Article> Articles { get; set; } = new List<Article>();
 }

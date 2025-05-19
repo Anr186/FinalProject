@@ -32,8 +32,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(a => a.Content).IsRequired();
             entity.Property(a => a.Status).IsRequired();
             entity.Property(a => a.SubmittedDate).IsRequired();
-            entity.Property(a => a.ImagePngPath).IsRequired();
-            entity.Property(a => a.WordDocumentPath).IsRequired();
+            entity.Property(a => a.ImagePngPath);
+            entity.Property(a => a.WordDocumentPath);
         });
     }
 }
