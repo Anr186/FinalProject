@@ -25,6 +25,27 @@ const SubmitArticle = ({ userId }) => {
     }));
   };
 
+//   const handleReject = async (articleId) => {
+//   try {
+//     const response = await fetch(`http://localhost:5284/articles/${articleId}`, {
+//       method: 'PUT',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({ status: 'Rejected' }),
+//     });
+
+//     if (!response.ok) {
+//       throw new Error('Failed to reject article');
+//     }
+
+//     setArticle(prev => prev.filter(article => article.id !== articleId));
+//   } catch (error) {
+//     console.error(error);
+//     alert('Error rejecting article');
+//   }
+// };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);

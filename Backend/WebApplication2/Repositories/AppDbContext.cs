@@ -7,6 +7,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Article> Articles { get; set; }
+    public DbSet<Recense> Recenses { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -35,5 +36,18 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(a => a.ImagePngPath);
             entity.Property(a => a.WordDocumentPath);
         });
+
+        modelBuilder.Entity<Recense>(entity =>
+        {
+            entity.HasKey(r => r.Id);
+            entity.Property(r => r.ArticleId).IsRequired();
+            entity.Property(r => r.ReviewerId).IsRequired();
+            entity.Property(r => r.AuthorId).IsRequired();
+            entity.Property(r => r.Rating).IsRequired();
+            entity.Property(r => r.Recommendation).IsRequired();
+            entity.Property(r => r.Status).IsRequired().HasDefaultValue("Pending");
+            entity.Property(r => r.CreatedAt).IsRequired();
+            entity.Property(r => r.UpdatedAt).IsRequired();
+});
     }
 }

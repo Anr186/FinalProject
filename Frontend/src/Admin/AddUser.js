@@ -23,7 +23,7 @@ const AddUser = () => {
       fullName: firstName + ' ' + lastName,
       email,
       role,
-      password: 'defaultPassword123',  // стандартный пароль
+      password: '123', 
     };
 
     try {
@@ -117,7 +117,7 @@ const AddUser = () => {
             <option value="">Select Role</option>
             <option value="Admin">Admin</option>
             <option value="Author">Author</option>
-            <option value="Viewer">Viewer</option>
+            <option value="Reviewer">Reviewer</option>
           </select>
         </div>
 

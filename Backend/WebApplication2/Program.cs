@@ -16,6 +16,9 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<ArticleService>();
 
+builder.Services.AddScoped<IRecenseRepository, RecenseRepository>();
+builder.Services.AddScoped<RecenseService>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
@@ -282,5 +285,86 @@ app.MapDelete("/articles/{id}", (int id, ArticleService service) =>
         return Results.NotFound();
     }
 });
+app.MapGet("/recenses", (RecenseService service) =>
+{
+    var recenses = service.GetAll();
+    return Results.Ok(recenses);
+});
 
+app.MapGet("/recenses/{id}", (int id, RecenseService service) =>
+{
+    try
+    {
+        var recense = service.GetById(id);
+        return Results.Ok(recense);
+    }
+    catch (KeyNotFoundException)
+    {
+        return Results.NotFound();
+    }
+});
+
+app.MapGet("/recenses/article/{articleId}", async (int articleId, RecenseService service) =>
+{
+    var recenses = await service.GetByArticleIdAsync(articleId);
+    return Results.Ok(recenses);
+});
+
+app.MapGet("/recenses/reviewer/{reviewerId}", async (int reviewerId, RecenseService service) =>
+{
+    var recenses = await service.GetByReviewerIdAsync(reviewerId);
+    return Results.Ok(recenses);
+});
+
+app.MapPost("/recenses", (Recense recense, RecenseService service) =>
+{
+    // if (recense.ArticleId <= 0)
+    //     return Results.BadRequest("ArticleId is required");
+    
+    // if (recense.ReviewerId <= 0)
+    //     return Results.BadRequest("ReviewerId is required");
+    
+    // if (string.IsNullOrEmpty(recense.Recommendation))
+    //     return Results.BadRequest("Recommendation is required");
+
+    recense.Status = "Pending";
+    recense.CreatedAt = DateTime.UtcNow;
+    recense.UpdatedAt = DateTime.UtcNow;
+
+    try
+    {
+        var createdRecense = service.Add(recense);
+        return Results.Created($"/recenses/{createdRecense.Id}", createdRecense);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+});
+
+app.MapPatch("/recenses/{id}", (int id, Recense recense, RecenseService service) =>
+{
+    try
+    {
+        var updatedRecense = service.Update(id, recense);
+        return Results.Ok(updatedRecense);
+    }
+    catch (KeyNotFoundException)
+    {
+        return Results.NotFound();
+    }
+});
+
+app.MapDelete("/recenses/{id}", (int id, RecenseService service) =>
+{
+    try
+    {
+        service.Delete(id);
+        return Results.NoContent();
+    }
+    catch (KeyNotFoundException)
+    {
+        return Results.NotFound();
+    }
+});
 app.Run();

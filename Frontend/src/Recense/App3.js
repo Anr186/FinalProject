@@ -16,7 +16,7 @@ function App({ user, onLogout }) {
         
         <main className="app-content">
           <Routes>
-            <Route path="/" element={<Profile />} />
+            <Route path="/" element={<Profile email={user?.email} />} />
             <Route path="/in-progress" element={<InProgressReviews />} />
             <Route path="/completed" element={<CompletedReviews />} />
           </Routes>
