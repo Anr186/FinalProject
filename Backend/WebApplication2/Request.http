@@ -51,5 +51,65 @@ Content-Type: application/json
   "bio": "asdasdasfsdfsfsdfdf"
 }
 
+###
+POST {{URL}}/users/1/upload-resume
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="1.pdf"
+Content-Type: application/pdf
+
+< ./1.pdf
+--WebAppBoundary--
+
+###
+POST {{URL}}/users/2/upload-resume
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="2.docx"
+Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document
+
+< ./2.docx
+--WebAppBoundary--
+
+###
+GET {{URL}}/users/1/download-resume
+Accept: application/pdf
+
+###
+PATCH {{URL}}/users/2/update-resume
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="3.docx"
+Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document
+
+< ./3.docx
+--WebAppBoundary--
+
+###
+POST {{URL}}/users/1/upload-resume
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="pic.png"
+Content-Type: image/png
+
+< ./pic.png
+--WebAppBoundary--
+
+###
+PATCH {{URL}}/users/1/update-resume
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="pic.png"
+Content-Type: image/png
+
+< ./pic.png
+--WebAppBoundary--
+
+
 ### 
 DELETE {{URL}}/users/1
