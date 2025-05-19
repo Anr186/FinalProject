@@ -15,7 +15,7 @@ Content-Type: application/json
 {
   "fullName": "Katya",
   "email": "katya@yandex.com",
-  "password": "1",
+  "password": "123451",
   "Specialization": "katyas", 
   "location": "USA",
   "bio": "asdasdasfsdfsfsdfdf"
@@ -45,7 +45,7 @@ Content-Type: application/json
 {
   "fullName": "Andrey",
   "email": "andrey@yandex.com",
-  "password": "1",
+  "password": "1234523",
   "Specialization": "andreys", 
   "location": "USA",
   "bio": "asdasdasfsdfsfsdfdf"

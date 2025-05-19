@@ -8,6 +8,7 @@ const Navbar = ({ user, onLogout }) => {
       justifyContent: 'space-between',
       alignItems: 'center',
       padding: '10px 20px',
+      // backgroundImage: 'url(../img/navBackgr.png)',
       backgroundColor: '#f8f9fa',
       borderBottom: '1px solid #dee2e6'
     }}>
