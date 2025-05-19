@@ -38,6 +38,10 @@ namespace WebApplication2.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("ImagePngPath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
@@ -52,11 +56,15 @@ namespace WebApplication2.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("WordDocumentPath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Article");
+                    b.ToTable("Articles");
                 });
 
             modelBuilder.Entity("WebApplication2.Model.User", b =>

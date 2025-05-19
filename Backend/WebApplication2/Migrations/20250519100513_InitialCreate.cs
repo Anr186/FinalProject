@@ -32,7 +32,7 @@ namespace WebApplication2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Article",
+                name: "Articles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -42,13 +42,15 @@ namespace WebApplication2.Migrations
                     Content = table.Column<string>(type: "text", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false),
                     SubmittedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UserId = table.Column<int>(type: "integer", nullable: false)
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    ImagePngPath = table.Column<string>(type: "text", nullable: false),
+                    WordDocumentPath = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Article", x => x.Id);
+                    table.PrimaryKey("PK_Articles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Article_Users_UserId",
+                        name: "FK_Articles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -56,8 +58,8 @@ namespace WebApplication2.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Article_UserId",
-                table: "Article",
+                name: "IX_Articles_UserId",
+                table: "Articles",
                 column: "UserId");
         }
 
@@ -65,7 +67,7 @@ namespace WebApplication2.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Article");
+                name: "Articles");
 
             migrationBuilder.DropTable(
                 name: "Users");

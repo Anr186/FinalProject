@@ -36,7 +36,7 @@ Content-Type: application/json
 {
     "email": "andrey.terent1ev@mail.ru",
     "password": "123456",
-    "fullName": "Reviewer Boba"
+    "fullName": "Boba"
 }
 ###
 PATCH {{URL}}/users/1

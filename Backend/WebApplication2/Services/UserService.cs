@@ -33,7 +33,10 @@ public class UserService
         Console.WriteLine($"Stored password: {user.Password}, input password: {password}");
         return user.Password == password ? user : null;
     }  
-    
+    public async Task<User?> GetByEmailAsync(string email)
+    {
+        return await _repository.GetByEmailAsync(email);
+    }
     public bool IsAdmin(User user) => user.Role == AdminRole;
     public bool IsAuthor(User user) => user.Role == AuthorRole;
     public bool IsReviewer(User user) => user.Role == ReviewerRole; 

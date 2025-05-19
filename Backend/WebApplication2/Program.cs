@@ -13,6 +13,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserService>();
 
+builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
+builder.Services.AddScoped<ArticleService>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
@@ -49,6 +52,14 @@ app.MapGet("/users/{id}", (int id, UserService service) =>
     {
         return Results.NotFound();
     }
+});
+app.MapGet("/users/by-email", async (string email, UserService service) =>
+{
+    var user = await service.GetByEmailAsync(email);
+    if (user == null)
+        return Results.NotFound();
+
+    return Results.Ok(user);
 });
 
 app.MapGet("/users/check-email", async (string email, UserService service) =>
@@ -188,6 +199,56 @@ app.MapPatch("/users/{id}", (int id, User user, UserService service) =>
 });
 
 app.MapDelete("/users/{id}", (int id, UserService service) =>
+{
+    try
+    {
+        service.Delete(id);
+        return Results.NoContent();
+    }
+    catch (KeyNotFoundException)
+    {
+        return Results.NotFound();
+    }
+});
+app.MapGet("/articles", (ArticleService service) =>
+{
+    var articles = service.GetAll();
+    return Results.Ok(articles);
+});
+
+app.MapGet("/articles/{id}", (int id, ArticleService service) =>
+{
+    try
+    {
+        var article = service.GetById(id);
+        return Results.Ok(article);
+    }
+    catch (KeyNotFoundException)
+    {
+        return Results.NotFound();
+    }
+});
+
+app.MapGet("/articles/user/{userId}", async (int userId, ArticleService service) =>
+{
+    var articles = await service.GetByUserIdAsync(userId);
+    return Results.Ok(articles);
+});
+
+app.MapPatch("/articles/{id}", (int id, Article article, ArticleService service) =>
+{
+    try
+    {
+        var updatedArticle = service.Update(id, article);
+        return Results.Ok(updatedArticle);
+    }
+    catch (KeyNotFoundException)
+    {
+        return Results.NotFound();
+    }
+});
+
+app.MapDelete("/articles/{id}", (int id, ArticleService service) =>
 {
     try
     {

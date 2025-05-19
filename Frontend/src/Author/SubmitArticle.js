@@ -56,15 +56,6 @@ const SubmitArticle = () => {
       </div>
 
       <div style={{ margin: '20px 0' }}>
-        <h2>Tags</h2>
-        <input 
-          type="text" 
-          placeholder="Enter tags separated by commas" 
-          style={{ width: '100%', padding: '8px' }}
-        />
-      </div>
-
-      <div style={{ margin: '20px 0' }}>
         <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <input type="checkbox" />
           <span>I confirm that this article is my original work and I have read and agree to the submission guidelines</span>
